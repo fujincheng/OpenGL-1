@@ -4,12 +4,14 @@
   <PropertyGroup Label="UserMacros" >
       <GLEW>$(SolutionDir)\LIB\GLEW</GLEW>
       <FREEGLUT>$(SolutionDir)\LIB\FreeGLUT</FREEGLUT>
+      <GLM>$(SolutionDir)\LIB\GLM</GLM>
   </PropertyGroup>
   <PropertyGroup>
     <IncludePath>$(GLEW)\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(GLEW)\lib\Release\$(Platform);$(LibraryPath)</LibraryPath>
     <IncludePath>$(FREEGLUT)\include;$(IncludePath)</IncludePath>
     <LibraryPath>$(FREEGLUT)\lib\$(PlatformTarget);$(LibraryPath)</LibraryPath>
+    <IncludePath>$(GLM)\;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <link>
