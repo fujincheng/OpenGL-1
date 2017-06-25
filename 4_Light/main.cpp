@@ -51,16 +51,17 @@ void init(int width, int height)
 
 	glClearColor(0.0, 0.0, 0.0, 1.0);
 	//设置光照  
-	//const GLfloat light_ambient[] = { 0.0f, 0.0f, 0.0f, 1.0f };//环境强度
-	//const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };//镜面强度
+	const GLfloat light_ambient[] = { 0.0f, 0.0f, 0.0f, 1.0f };//环境强度
+	const GLfloat light_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };//镜面强度
+
 	const GLfloat white_light_diffuse[] = { 1.0f, 1.0f, 1.0f, 1.0f };//散射强度
 	const GLfloat red_light_diffuse[] = { 1.0f, 0.0f, 0.0f, 1.0f };//散射强度
 
-	const GLfloat red_light_position[] = { 5.0f, 5.0f, 5.0f, 0.0f };
-	const GLfloat white_light_position[] = { -5.0f, 5.0f, 5.0f, 0.0f };
+	const GLfloat red_light_position[] = { 5.0f, 5.0f, 3.0f, 0.0f };
+	const GLfloat white_light_position[] = { -5.0f, 5.0f, 3.0f, 0.0f };
 
-	//const GLfloat mat_ambient[] = { 0.7f, 0.7f, 0.7f, 1.0f };
-	//const GLfloat mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+	const GLfloat mat_ambient[] = { 0.7f, 0.7f, 0.7f, 1.0f };
+	const GLfloat mat_specular[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	const GLfloat mat_diffuse[] = { 0.5f, 0.5f, 0.5f, 1.0f };
 	const GLfloat high_shininess[] = { 50.0f };
 
@@ -73,18 +74,18 @@ void init(int width, int height)
 	glEnable(GL_COLOR_MATERIAL);
 	glEnable(GL_LIGHTING);
 
-	//glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
-	//glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light_specular);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, red_light_diffuse);
 	glLightfv(GL_LIGHT0, GL_POSITION, red_light_position);
 
-	//glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient);
-	//glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular);
+	glLightfv(GL_LIGHT1, GL_AMBIENT, light_ambient);
+	glLightfv(GL_LIGHT1, GL_SPECULAR, light_specular);
 	glLightfv(GL_LIGHT1, GL_DIFFUSE, white_light_diffuse);
 	glLightfv(GL_LIGHT1, GL_POSITION, white_light_position);
 
-	//glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-	//glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
 	glMaterialfv(GL_FRONT, GL_SHININESS, high_shininess);
 }
