@@ -3,7 +3,7 @@
 #include <iostream>
 
 float angle = 0.0;
-bool auto_rotate = false;
+bool auto_rotate = true;
 
 
 void display(void)
