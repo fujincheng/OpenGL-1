@@ -7,9 +7,12 @@
 //double p1[3]{ 0,0,0 };
 //double p2[3]{ 0,1,0 };
 double angle = 0;
-double angle_cube = -45;
+//double angle_cube = -45;
 GLubyte image[64 * 64 * 3];
 GLubyte surround[64 * 64 * 3];
+
+int win_w =500;
+int win_h = 500;
 
 bool isFirst = true;
 bool cube_rotate = false;
@@ -20,19 +23,24 @@ void draw_teapot(double size) {
 	glPushMatrix();
 	
 	glColor3f(1.0f, 0.0f, 0.0f);
-	if(!isFirst)
-		glTranslatef(3, 0, 0);
+	
 	if (isFirst) {
-		glRotatef(90, 0, 1.0, 0);
+		glm::mat4 transform_camera = glm::affineInverse(glm::lookAt(glm::vec3(0, 0, 0), glm::vec3(0, 0, 20), glm::vec3(0, 1, 0)));
+		glm::mat4 model_view_matrix = glm::affineInverse(transform_camera);
+		glLoadMatrixf(&model_view_matrix[0][0]);
+		glPushMatrix();
+		glRotatef(-angle, 0, 1.0, 0);
+		glTranslatef(0, 0, 10);
 	}
+	glTranslatef(0, 0, 10);
 	glRotatef(angle, 0, 1.0, 0);
-	angle += 2;
+	angle += 1;
 	if (angle >= 360) angle = angle - 360;
 	glutSolidTeapot(size);
 	
 	if (isFirst) {
-		//glColor3f(1.0f, 1.0f, 1.0f);
-		glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, 700, 500, 0);
+		glPopMatrix();
+		glCopyTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 0, 0, win_w, win_h, 1);
 	}
 	glPopMatrix();
 }
@@ -43,17 +51,17 @@ void draw_cube(double size)
 	glDisable(GL_LIGHTING);
 	glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
-	glTranslatef(-3, 0, 0);
-	glRotatef(angle_cube, 0, 1.0, 0);
-	if(cube_rotate)
-		angle_cube+=2;
+	glTranslatef(0, 0, -10);
+	glRotatef(angle, 0, 1.0, 0);
+	/*if(cube_rotate)
+		angle_cube+=2;*/
 	/*if(isFirst)
 		angle += 2;
 	if (angle >= 360) angle = angle - 360;*/
 
 	double beg, end;
-	beg = isFirst ? 0.25 : 0;
-	end = isFirst ? 0.75 : 1.0;
+	beg = isFirst ? 0.2 : 0;
+	end = isFirst ? 0.8 : 1.0;
 
 	glBegin(GL_QUADS);
 	if (!isFirst) {
@@ -69,7 +77,7 @@ void draw_cube(double size)
 		glTexCoord2f(beg, beg); glVertex3f(size / 2, -size / 2, -size / 2);
 	}
 	//glColor3f(0.0, 0.0, 1.0);//前
-	if (!isFirst) {
+	if (isFirst) {
 		glTexCoord2f(beg, end);glVertex3f(size / 2, size / 2, size / 2);
 		glTexCoord2f(end, end);glVertex3f(-size / 2, size / 2, size / 2);
 		glTexCoord2f(end, beg);glVertex3f(-size / 2, -size / 2, size / 2);
@@ -91,7 +99,7 @@ void draw_cube(double size)
 		glTexCoord2f(end, beg); glVertex3f(-size / 2, -size / 2, size / 2);
 	}
 	//glColor3f(0.0, 1.0, 1.0);//右
-	if (isFirst) {
+	if (!isFirst) {
 		glTexCoord2f(beg, end); glVertex3f(size / 2, size / 2, -size / 2);
 		glTexCoord2f(end, end); glVertex3f(size / 2, size / 2, size / 2);
 		glTexCoord2f(end, beg); glVertex3f(size / 2, -size / 2, size / 2);
@@ -104,8 +112,8 @@ void draw_cube(double size)
 
 void display(void)
 {
-	glm::mat4 transform_camera(1.0f); // 摄像机的位置和定向，即摄像机在世界坐标系中位置
-	transform_camera = glm::affineInverse(glm::lookAt(glm::vec3(0, 5, 10), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
+	// 摄像机的位置和定向，即摄像机在世界坐标系中位置
+	glm::mat4 transform_camera = glm::affineInverse(glm::lookAt(glm::vec3(20, 10, 20), glm::vec3(0, 0, 0), glm::vec3(0, 1, 0)));
 	glm::mat4 model_view_matrix = glm::affineInverse(transform_camera);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -113,12 +121,12 @@ void display(void)
 	glLoadMatrixf(&model_view_matrix[0][0]);
 	isFirst = true;
 	draw_teapot(2);
-	//glCopyTexImage2D(GL_TEXTURE_2D,0,GL_RGB,0,0,500);
+
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	draw_cube(2);
+	draw_cube(6);
 	glTexImage2D(GL_TEXTURE_2D, 0, 3, 64, 64, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	isFirst = false;
-	draw_cube(2);
+	draw_cube(6);
 	draw_teapot(2);
 
 	glFlush();
@@ -130,6 +138,10 @@ void display(void)
 void reshape(int w, int h)
 {
 	if (h == 0) h = 1;
+	
+	win_w = w;
+	win_h = h;
+
 	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -226,7 +238,7 @@ int main(int argc, char** argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
 	glutInitWindowPosition(400, 100);
-	glutInitWindowSize(700, 500);
+	glutInitWindowSize(win_w, win_h);
 	glutCreateWindow("Cube");
 
 	glutDisplayFunc(display);
